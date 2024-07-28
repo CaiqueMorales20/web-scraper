@@ -69,5 +69,5 @@
 }
 
 .title {
-  @apply mb-4 text-2xl font-bold
+  @apply mb-4 text-xl md:text-2xl font-bold
 }

@@ -2,6 +2,8 @@
 
 import { JSDOM } from 'jsdom'
 
+import { ScrapContent } from '@/@types'
+
 export async function scrap(url: string) {
   try {
     const res = await fetch(`/api/scrap?url=${encodeURIComponent(url)}`)
@@ -24,7 +26,7 @@ export async function scrap(url: string) {
       (image) => image.src,
     )
 
-    return { title, description, links, images }
+    return { title, description, links, images } as ScrapContent
   } catch (error) {
     console.error('Fetch error:', error)
   }
