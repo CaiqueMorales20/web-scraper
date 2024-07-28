@@ -1,11 +1,36 @@
+'use client'
+
+import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 
+const scrapInputSchema = z.object({
+  name: z.string().min(1, 'Please insert a url').url(),
+})
+
+type ScrapInputType = z.infer<typeof scrapInputSchema>
+
 export default function Home() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ScrapInputType>({
+    resolver: zodResolver(scrapInputSchema),
+  })
+
   const text = 'https://v0.dev/r/SSB1T64v6sl'
+
+  function handleScrap({ name }: ScrapInputType) {
+    console.log(name)
+    reset()
+  }
 
   return (
     <main className="mx-auto flex w-[80vw] flex-col">
@@ -19,10 +44,15 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="mb-10 flex gap-4">
-        <Input placeholder="Enter a URL to scrap" />
+      <form onSubmit={handleSubmit(handleScrap)} className="mb-10 flex gap-4">
+        <div className="w-full space-y-2">
+          <Input {...register('name')} placeholder="Enter a URL to scrap" />
+          {errors.name && (
+            <span className="block text-red-400">{errors.name.message}</span>
+          )}
+        </div>
         <Button>Scrap</Button>
-      </div>
+      </form>
 
       <section className="space-y-10 rounded-md border p-6">
         <div>
